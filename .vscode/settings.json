@@ -1,0 +1,7 @@
+{
+  "background.fullscreen": {
+    "image": "https://images8.alphacoders.com/114/1141570.png", // url of your image
+    "opacity": 0.91, // 0.85 ~ 0.95 recommended
+    "size": "cover" // also css, `cover` to self-adaption (recommended)，or `contain`、`200px 200px`
+  }
+}
