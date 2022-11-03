@@ -1,0 +1,39 @@
+section {
+  background-color: #4b515d;
+}
+
+div.input-group {
+  /* width: 85%;
+  margin-left: auto; */
+  margin-bottom: 1rem;
+}
+
+input.form-control {
+  border-radius: 2rem;
+}
+
+#search-addon {
+  background-color: #fff;
+  border-radius: 0 1rem 1rem 0;
+}
+
+div.card {
+  color: #4b515d;
+  border-radius: 2rem;
+}
+
+div.supp-info {
+  font-size: 1rem;
+}
+
+#temp {
+  color: #1c2331;
+}
+
+#weather {
+  color: #868b94;
+}
+
+i.fas {
+  color: #868b94;
+}
