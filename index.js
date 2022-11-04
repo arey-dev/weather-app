@@ -1,10 +1,29 @@
 // test
-getWeatherApi("manila");
+const KEY = "54606dac77b8599c32e90d01077bfac0";
+
+// work on search input
+
+getWeatherApi("Manila");
+
+async function getGeocodeApi(city) {
+  const url = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${KEY}`;
+
+  const response = await fetch(url, { mode: "cors" });
+  const data = await response.json();
+
+  console.log(data);
+  return data;
+}
 
 async function getWeatherApi(city) {
-  const KEY = "54606dac77b8599c32e90d01077bfac0";
+  const geocode = await getGeocodeApi(city);
+  const lat = geocode[0].lat;
+  const lon = geocode[0].lon;
+
   const UNIT = "metric";
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${KEY}&units=${UNIT}`;
+  
+  // doesn't return desired city
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${KEY}&units=${UNIT}`;
 
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
@@ -18,29 +37,29 @@ async function getWeatherApi(city) {
 
 // returns an object with the needed weather data
 function weather(obj) {
-  const parseTemp = (value) => {
-    return value.toFixed(1);
+  const fixDecimalPoint = (value, places) => {
+    return value.toFixed(places);
   };
 
   const parseDate = (dt, timezone) => {
     const date = new Date(dt * 1000 + timezone * 1000);
     const hours = date.getUTCHours();
-    const minutes = '0' + date.getUTCMinutes();
+    const minutes = "0" + date.getUTCMinutes();
 
     return hours + ":" + minutes.slice(-2);
   };
 
-  const parseWind = (value) => {
-    return (value * 3.6).toFixed(1);
+  const convertMphToKph = (value) => {
+    return value * 3.6;
   };
 
   return {
     city: obj.name,
     dt: parseDate(obj.dt, obj.timezone),
-    temp: parseTemp(obj.main.temp),
+    temp: fixDecimalPoint(obj.main.temp, 1),
     weather: obj.weather[0].description,
     icon: obj.weather[0].icon,
-    wind: parseWind(obj.wind.speed),
+    wind: fixDecimalPoint(convertMphToKph(obj.wind.speed), 1),
     humid: obj.main.humidity,
     clouds: obj.clouds.all,
   };
@@ -64,7 +83,6 @@ function fillCardInfo(obj) {
   humid.textContent = obj.humid + " %";
   clouds.textContent = obj.clouds + " %";
 
-  const ICON_URL_BASE = "http://openweathermap.org/img/wn/";
-  const IMAGE_EXT = ".png"
-  icon.src = ICON_URL_BASE + obj.icon + IMAGE_EXT;
+  const icon_url = `http://openweathermap.org/img/wn/${obj.icon}.png`;
+  icon.src = icon_url;
 }
